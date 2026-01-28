@@ -39,3 +39,9 @@ class Settings:
     IMAGES = {}
     SOUNDS = {}
     FONTS = {}
+
+    Colors = {
+        RED_COLOR = (255, 65, 54)
+        GREEN_COLOR = (46, 204, 64)
+        BLUE_COLOR = (0, 116, 217)
+    }

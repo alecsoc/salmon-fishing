@@ -41,7 +41,7 @@ class Settings:
     FONTS = {}
 
     COLORS = {
-        RED_COLOR = (255, 65, 54)
-        GREEN_COLOR = (46, 204, 64)
-        BLUE_COLOR = (0, 116, 217)
+        "RED_COLOR" : (255, 65, 54)
+        "GREEN_COLOR" : (46, 204, 64)
+        "BLUE_COLOR" : (0, 116, 217)
     }

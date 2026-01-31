@@ -1,6 +1,5 @@
 from fish import Fish 
 
-
 class Spawn_manager():
     def __int__(self, spawn_timer, fishes):
         #spawn timer cuando llegue dependiendo del nivel a los valores constantes, se genera un pez con las reglas de la clase Fish()
@@ -31,12 +30,12 @@ class Spawn_manager():
            if self.spawn_timer == SPAWN_RATE_HARD:
               self.fishes.append(Fish())
               self.spawn_time = 0
-
-        for fish in self.fishes:
-            fish.update()
+        
         #este bucle de abajo es para que los peces que esten muy lejos de la pantalla se elminen, the_fishes.x es simplemente la variable x de la clase Fish junto con el bucle, recordando que self.x se refiere a las coordenadas en x
+        #se tiene que ir a la funcion update_fish_movement para que el self.x de la clase fish aumente progresivamente
         fishes_on_screen = []
         for the_fishes in self.fishes:
+           the_fishes.update_fish_movement()
            #-100 y 1280 -100 estan practicamente fuera de los limites de la pantalla
            if the_fishes.x > -100 and the_fishes.x < 1280 + 100:
               #aqui agregamos uno por uno a los peces que cumplen las condiciones

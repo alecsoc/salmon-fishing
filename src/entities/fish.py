@@ -14,7 +14,7 @@ class Fish:
         self.color.type = random.choice(Settings.COLORS["RED_COLOR"], Settings.COLORS["BLUE_COLOR"], Settings.COLORS["RED_COLOR"])
         self.direction = random.choice(True, False)
         if self.direction == True:
-            self.x = -720
+            self.x = self.width
             self.normal_image = True
             if difficulty == "EASY":
                self.speed = random.uniform(2, 4)
@@ -24,7 +24,7 @@ class Fish:
                 self.speed = random.uniform(5, 7.3)
 
         else:
-            self.x = 720
+            self.x = 1280 + self.width
             if difficulty == "EASY":
                self.speed = random.uniform(2, 4) * -1
             if difficulty == "MEDIUM":
@@ -32,7 +32,7 @@ class Fish:
             if difficulty == "HARD":
                 self.speed = random.uniform(5, 7.3) * -1
 
-        self.y = random.randint(110, 1280 - 110)
+        self.y = random.randint(110, 720- 110)
 
     def turn(self, interface):
         #flip necesita la imagen, la posicion en X y Y, por eso es que en la parte de flip al final esta en falso haciendo refeencia a que la imagen no se volteara de arriba hacia abajo(eje y)
@@ -42,3 +42,4 @@ class Fish:
     def update_fish_movement(self):
         #esto es para que el pez no se quede estatico y vaya avanzando independientemente de su direccion, como se ve arriba en la part de la dificultad se suma o se resta si self.speed es negativo o positivo
         self.x += self.speed
+

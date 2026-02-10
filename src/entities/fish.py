@@ -9,12 +9,12 @@ class Fish:
         #Coloco 1280 y 720 visto que es la resolucion base para todo
         self.normal_image = False
         self.image = fish_image
-        self.width = 65
-        self.height = 35
+        self.WIDTH_SCREEN = 65
+        self.HEIGHT_SCREEN = 35
         self.color.type = random.choice(Settings.COLORS["RED_COLOR"], Settings.COLORS["BLUE_COLOR"], Settings.COLORS["RED_COLOR"])
         self.direction = random.choice(True, False)
         if self.direction == True:
-            self.x = self.width
+            self.x = self.WIDTH_SCREEN
             self.normal_image = True
             if difficulty == "EASY":
                self.speed = random.uniform(2, 4)
@@ -24,7 +24,7 @@ class Fish:
                 self.speed = random.uniform(5, 7.3)
 
         else:
-            self.x = 1280 + self.width
+            self.x = 1280 + self.WIDTH_SCREEN
             if difficulty == "EASY":
                self.speed = random.uniform(2, 4) * -1
             if difficulty == "MEDIUM":
@@ -39,7 +39,8 @@ class Fish:
         flipped_image = pygame.transform.flip(self.image, self.normal_image, False)
         interface.blit(flipped_image)
 
-    def update_fish_movement(self):
+    def update_fish_movement(self, dt):
         #esto es para que el pez no se quede estatico y vaya avanzando independientemente de su direccion, como se ve arriba en la part de la dificultad se suma o se resta si self.speed es negativo o positivo
-        self.x += self.speed
+        self.x += self.speed * dt * 60
+
 

@@ -1,7 +1,7 @@
 import pygame
 from src.config.settings import Settings
-from ui.base_screen import BaseScreen
-from ui.components.button import Button
+from src.ui.base_screen import BaseScreen
+from src.ui.components.button import Button
 
 class CreditsScreen(BaseScreen):
     def __init__(self, screen):

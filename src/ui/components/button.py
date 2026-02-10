@@ -1,7 +1,7 @@
 import pygame
 class Button:
   def __init__(self, x, y, width, height):
-    self.rectan = pygame.Rect(x, y, width, height)
+    self.rect = pygame.Rect(x, y, width, height)
   def draw(self, surface):
     # TIP: Si alguna vez necesitas ver dónde están, descomenta esto:
         # pygame.draw.rect(surface, (255, 0, 0), self.rect, width=2)

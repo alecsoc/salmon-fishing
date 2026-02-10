@@ -1,5 +1,5 @@
-from ui.base_screen import BaseScreen
-from ui.components.button import Button
+from src.ui.base_screen import BaseScreen
+from src.ui.components.button import Button
 import pygame
 
 class MainScreen(BaseScreen):

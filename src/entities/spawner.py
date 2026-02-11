@@ -1,44 +1,55 @@
-from fish import Fish 
+import random
+from src.config.settings import Settings
+from src.config.game_modes import MODES
+from src.managers.asset_manager import AssetManager
+from src.entities.fish import Fish
 
-class Spawn_manager():
-    def __int__(self, spawn_timer, fishes):
-        #spawn timer cuando llegue dependiendo del nivel a los valores constantes, se genera un pez con las reglas de la clase Fish()
+class SpawnManager:
+    def __init__(self):
         self.spawn_timer = 0
         self.fishes = []
 
-    def update_spawn(self, difficulty):
-        #estos serian "milisengundos"
-        SPAWN_RATE_EASY = 26
-        SPAWN_RATE_MEDIUM = 22
-        SPAWN_RATE_HARD = 17
+    def _create_fish(self, difficulty):
+        """Método fábrica (Factory Method) encargado de definir y crear peces según su dificultad."""
+        is_from_left = random.choice(
+            [True, False]
+        )  # True = sale por la izquierda, False = sale por la derecha
 
-        if difficulty == "EASY":
-           #coloque el spawn time en cero al final del bucle para que se reinicie el contador y asi se genere otro pez
-           self.spawn_timer += 1
-           if self.spawn_timer == SPAWN_RATE_EASY:
-              self.fishes.append(Fish())
-              self.spawn_time = 0
+        if is_from_left:
+            x_pos = -Settings.SPAWN_MARGIN
+        else:
+            x_pos = Settings.S_WIDTH + Settings.SPAWN_MARGIN
 
-        if difficulty == "MEDIUM":
-           self.spawn_timer += 1
-           if self.spawn_timer == SPAWN_RATE_MEDIUM:
-              self.fishes.append(Fish())
-              self.spawn_time = 0
+        y_pos = random.randint(
+            int(Settings.S_HEIGHT * 0.2), int(Settings.S_HEIGHT * 0.8)
+        )
 
-        if difficulty == "HARD":
-           self.spawn_timer += 1
-           if self.spawn_timer == SPAWN_RATE_HARD:
-              self.fishes.append(Fish())
-              self.spawn_time = 0
-        
-        #este bucle de abajo es para que los peces que esten muy lejos de la pantalla se elminen, the_fishes.x es simplemente la variable x de la clase Fish junto con el bucle, recordando que self.x se refiere a las coordenadas en x
-        #se tiene que ir a la funcion update_fish_movement para que el self.x de la clase fish aumente progresivamente
-        fishes_on_screen = []
-        for the_fishes in self.fishes:
-           the_fishes.update_fish_movement()
-           #-100 y 1280 -100 estan practicamente fuera de los limites de la pantalla
-           if the_fishes.x > -100 and the_fishes.x < 1280 + 100:
-              #aqui agregamos uno por uno a los peces que cumplen las condiciones
-              fishes_on_screen.append(the_fishes)
-           #esta parte solo reemplaza todos los peces, tantp por fuera como en la pantalla por los peces que estan en ka pantalla
-           self.fishes = fishes_on_screen
+        base_speed = random.uniform(Settings.FISH_SPEED_MIN, Settings.FISH_SPEED_MAX)
+        multiplier = MODES[difficulty]["speed"]
+
+        speed = base_speed * multiplier
+        if not is_from_left:
+            speed *= -1  # se invierte la dirección
+
+        fish_image = AssetManager.get_image("fish")
+        new_fish = Fish(x_pos, y_pos, speed, fish_image)
+        self.fishes.append(new_fish)
+
+    def update_spawn(self, dt, difficulty):
+        self.spawn_timer += dt
+        spawn_cooldown = (
+            MODES[difficulty]["spawn"] / 1000.0
+        )  # conversión de milisegundos a segundos para comparar con el dt
+
+        if self.spawn_timer >= spawn_cooldown:
+            self._create_fish(difficulty)
+            self.spawn_timer = 0  # se reinicia para crear el siguiente pez
+
+        for fish in self.fishes:
+            fish.update_fish_movement(dt)
+
+        self.fishes = [fish for fish in self.fishes if not fish.is_offscreen()]
+
+    def draw(self, surface):
+        for fish in self.fishes:
+            fish.draw(surface)

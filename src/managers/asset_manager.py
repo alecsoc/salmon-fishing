@@ -1,4 +1,5 @@
 import pygame
+
 from src.config.settings import Settings
 
 class AssetManager:

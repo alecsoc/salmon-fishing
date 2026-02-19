@@ -1,4 +1,5 @@
 from pygame import mixer
+
 from src.config.settings import Settings
 
 class SoundPlayer:

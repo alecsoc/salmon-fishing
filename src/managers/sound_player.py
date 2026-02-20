@@ -1,4 +1,5 @@
 from pygame import mixer
+
 from src.config.settings import Settings
 
 class SoundPlayer:
@@ -16,3 +17,9 @@ class SoundPlayer:
             sound.play()
         else:
             raise Exception(f"Error: El sonido {key} no existe en Settings.")
+
+    @staticmethod
+    def stop_all():
+        mixer.music.stop()
+        mixer.stop()
+        print("Audio del sistema detenido.")

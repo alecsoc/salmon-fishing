@@ -6,6 +6,7 @@ from src.managers.asset_manager import AssetManager
 
 from src.ui.base_screen import BaseScreen
 from src.ui.components.button import Button
+from src.ui.components.text_label import TextLabel
 
 class MainScreen(BaseScreen):
     def __init__(self):
@@ -15,20 +16,17 @@ class MainScreen(BaseScreen):
         screen_h = Settings.S_HEIGHT
 
         center_x = screen_w // 2
-        start_y = screen_h // 2
+        start_y = screen_h // 2 - 20
         btn_w, btn_h = 250, 70
         spacing = 90
 
-        self.title_text = Settings.TITLE.upper()
-        font_path = AssetManager.get_font("title_font")
-
-        if font_path:
-            self.title_font = pygame.font.Font(font_path, 90)
-        else:
-            self.title_font = pygame.font.SysFont("sans-serif", 90, bold=True)
-            
-        self.title_surf = self.title_font.render(self.title_text, True, (255, 255, 255))
-        self.title_rect = self.title_surf.get_rect(center=(center_x, screen_h // 4))
+        self.title_label = TextLabel(
+            x=center_x,
+            y=screen_h // 4,
+            text=Settings.TITLE.upper(),
+            font_key="primary_font",
+            font_size=90,
+        )
 
         self.buttons = {
             "PLAY": Button(center_x, start_y, btn_w, btn_h, "JUGAR"),
@@ -53,9 +51,9 @@ class MainScreen(BaseScreen):
                         return event_map.get(key)
 
         return None
-
+    
     def update(self, dt):
-        pass
+        return super().update(dt)
 
     def draw(self, surface):
         if self.bg_image:
@@ -64,7 +62,7 @@ class MainScreen(BaseScreen):
         else:
             surface.fill((0, 105, 148))
 
-        surface.blit(self.title_surf, self.title_rect)
+        self.title_label.draw(surface)
 
         for button in self.buttons.values():
             button.draw(surface)

@@ -1,6 +1,7 @@
 import random
 import pygame
 import math
+
 from src.config.settings import Settings
 
 class Fish:
@@ -25,12 +26,21 @@ class Fish:
         img_hidden = assets.get("hidden_fish")
         img_revealed = assets.get(f"{color_name}_fish")
 
-        if self.speed < 0:
-            self.image_hidden = pygame.transform.flip(img_hidden, True, False) if img_hidden else None
-            self.image_revealed = pygame.transform.flip(img_revealed, True, False) if img_revealed else None
-        else:
-            self.image_hidden = img_hidden
-            self.image_revealed = img_revealed
+        target_size = (120, 60)
+
+        def process_sprite(img):
+            if img:
+                scaled = pygame.transform.scale(img, target_size)
+                
+                if self.speed > 0: 
+                    return pygame.transform.flip(scaled, True, False)
+                
+                return scaled
+            
+            return None
+
+        self.image_hidden = process_sprite(img_hidden)
+        self.image_revealed = process_sprite(img_revealed)
 
     def update_fish_movement(self, dt):
         self.x += self.speed * dt * 60
@@ -44,13 +54,13 @@ class Fish:
 
     def _draw_geometric_fish(self, surface, color, alpha=255):
         s = pygame.Surface((self.rect.width + 20, self.rect.height), pygame.SRCALPHA)
-        
         body_rect = pygame.Rect(10, 0, 50, 25)
+
         pygame.draw.rect(s, (*color, alpha), body_rect, border_radius=8)
-        pygame.draw.rect(s, (50, 50, 50, alpha), body_rect, 2, border_radius=8)
+        pygame.draw.rect(s, (Settings.COLORS["GRAY_ALPHA"]), body_rect, 2, border_radius=8)
         
         eye_x = body_rect.right - 10 if self.speed > 0 else body_rect.left + 10
-        pygame.draw.circle(s, (255, 255, 255, alpha), (eye_x, body_rect.centery - 5), 4)
+        pygame.draw.circle(s, (*Settings.COLORS["WHITE"], alpha), (eye_x, body_rect.centery - 5), 4)
         
         if self.speed > 0:
             pts = [(body_rect.left, body_rect.centery), (0, 0), (0, body_rect.height)]
@@ -58,7 +68,7 @@ class Fish:
             pts = [(body_rect.right, body_rect.centery), (s.get_width(), 0), (s.get_width(), body_rect.height)]
             
         pygame.draw.polygon(s, (*color, alpha), pts)
-        pygame.draw.polygon(s, (50, 50, 50, alpha), pts, 2)
+        pygame.draw.polygon(s, (Settings.COLORS["GRAY_ALPHA"]), pts, 2)
         
         surface.blit(s, (self.rect.x - 10 if self.speed > 0 else self.rect.x, self.rect.y))
 

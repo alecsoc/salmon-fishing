@@ -26,17 +26,20 @@ class SlideTransition:
 
         if self.state == "FADE_OUT":
             self.alpha += self.speed
+
             if self.alpha >= 255:
                 self.alpha = 255
                 self.state = "DELAY"
         
         elif self.state == "DELAY":
             self.delay_timer += 1
+            
             if self.delay_timer >= self.max_delay:
                 self.state = "FADE_IN"
         
         elif self.state == "FADE_IN":
             self.alpha -= self.speed
+
             if self.alpha <= 0:
                 self.alpha = 0
                 self.active = False

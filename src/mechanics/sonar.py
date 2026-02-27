@@ -28,7 +28,7 @@ class Sonar:
             self.alpha = 0
 
     def draw_bar(self, surface):
-        bar_w, bar_h = Settings.S_WIDTH - 80, 15
+        bar_w, bar_h = Settings.S_WIDTH - 80, 20
         x, y = 40, Settings.S_HEIGHT - 40
         
         bg_rect = pygame.Rect(x, y, bar_w, bar_h)
@@ -38,4 +38,4 @@ class Sonar:
         fill_rect = pygame.Rect(x, y, fill_w, bar_h)
         pygame.draw.rect(surface, Settings.COLORS["PASTEL_TEAL"], fill_rect, border_radius=7)
         
-        pygame.draw.rect(surface, Settings.COLORS["WHITE"], bg_rect, 2, border_radius=7)
+        pygame.draw.rect(surface, Settings.COLORS["WHITE"], bg_rect, 3, border_radius=7)

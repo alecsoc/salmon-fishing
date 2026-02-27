@@ -5,6 +5,7 @@ from src.config.settings import Settings
 import src.config.game_modes as game_modes
 
 from src.managers.asset_manager import AssetManager
+from src.managers.sound_player import SoundPlayer
 
 from src.ui.base_screen import BaseScreen
 
@@ -19,7 +20,6 @@ from src.mechanics.sonar import Sonar
 class GameplayScreen(BaseScreen):
     def __init__(self):
         self.bg_image = AssetManager.get_image("main_bg")
-        self.reset_game()
 
     def reset_game(self):
         self.mode = game_modes.ACTUAL_MODE 
@@ -31,6 +31,8 @@ class GameplayScreen(BaseScreen):
         self.target_color_name = random.choice(["red", "green", "blue"])
         self.target_color_rgb = Settings.COLORS[f"{self.target_color_name.upper()}_COLOR"]
         self.target_switch_timer = 0
+
+        SoundPlayer.play_music("main_theme")
         
         self.spawner = SpawnManager()
         self.flashlight = Flashlight()
@@ -50,7 +52,7 @@ class GameplayScreen(BaseScreen):
         
         f_floating = Settings.FONTS.get("floating_font")
         if not f_floating: f_floating = pygame.font.SysFont("Arial", 28, bold=True)
-        self.floating_texts = FloatingTextManager(f_floating)
+        self.floating_texts = FloatingTextManager()
         
         self.game_over_active = False
         self.game_over_timer = 0
@@ -63,6 +65,7 @@ class GameplayScreen(BaseScreen):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pygame.mouse.set_visible(True)
+                    SoundPlayer.stop_music()
                     return "GOTO_MENU"
             
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -82,13 +85,16 @@ class GameplayScreen(BaseScreen):
                 
                 if points > 0:
                     self.combo_counter.add()
+                    SoundPlayer.play_sfx("correct")
                 else:
                     self.combo_counter.reset()
+                    SoundPlayer.play_sfx("fail")
                 
                 self.score_display.update_score(self.current_score)
                 self.floating_texts.spawn(mouse_pos[0], mouse_pos[1], points)
                 self.spawner.fishes.remove(fish)
                 hit = True
+                
                 break
         
         if not hit:
@@ -100,14 +106,14 @@ class GameplayScreen(BaseScreen):
             
             if self.game_over_timer >= Settings.GAME_OVER_WAIT_TIME:
                 pygame.mouse.set_visible(True)
-                return "GOTO_MENU"
+                return ("GOTO_RESULTS", self.current_score)
             
             return
 
         self.game_time -= dt
         if self.game_time <= 0:
             self.game_time = 0
-            self.game_over_active = True
+            self._handle_game_over()
 
         self.target_switch_timer += dt
         if self.target_switch_timer >= 15.0:
@@ -120,6 +126,11 @@ class GameplayScreen(BaseScreen):
         self.floating_texts.update(dt)
         
         self.spawner.update_spawn(dt, self.mode)
+
+    def _handle_game_over(self):
+        self.game_over_active = True
+        SoundPlayer.stop_music()
+        SoundPlayer.play_sfx("time_up", 0.8)
 
     def _switch_target(self):
         self.target_color_name = random.choice(["red", "green", "blue"])
@@ -138,9 +149,9 @@ class GameplayScreen(BaseScreen):
         self.flashlight.draw(surface)
         self.sonar.draw_bar(surface)
         
+        self.target_display.draw(surface, self.target_color_name, self.target_color_rgb)
         self.score_display.draw(surface)
         self.timer_display.draw(surface)
-        self.target_display.draw(surface, self.target_color_name, self.target_color_rgb)
         
         self.combo_counter.draw(surface)
         self.floating_texts.draw(surface)
@@ -150,3 +161,4 @@ class GameplayScreen(BaseScreen):
 
     def on_enter(self):
         pygame.mouse.set_visible(False)
+        SoundPlayer.play_music("main_theme")

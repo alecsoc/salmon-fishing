@@ -15,6 +15,8 @@ from src.ui.components.slide import SlideTransition
 from src.ui.screens.main_screen import MainScreen
 from src.ui.screens.modes_screen import ModesScreen
 from src.ui.screens.gameplay_screen import GameplayScreen
+from src.ui.screens.results_screen import ResultsScreen
+from src.ui.screens.instructions_screen import InstructionsScreen
 from src.ui.screens.credits_screen import CreditsScreen
 
 class Game(GameBase):
@@ -33,12 +35,15 @@ class Game(GameBase):
 
     def on_start(self) -> None:
         AssetManager.load_all_assets()
-        print(f"DEBUG: Imagen de fondo cargada -> {AssetManager.get_image('main_bg')}")
+
+        SoundPlayer.play_music("menu_theme")
 
         self.screens = {
             "MAIN_MENU": MainScreen(),
             "MODES": ModesScreen(),
             "GAMEPLAY": GameplayScreen(),
+            "RESULTS": ResultsScreen(),
+            "INSTRUCTIONS": InstructionsScreen(),
             "CREDITS": CreditsScreen()
         }
 
@@ -53,6 +58,8 @@ class Game(GameBase):
             self.transition.start(self.current_screen, self.screens["MODES"], "MODES")
         elif result == "GOTO_CREDITS":
             self.transition.start(self.current_screen, self.screens["CREDITS"], "CREDITS")
+        elif result == "GOTO_INSTR":
+            self.transition.start(self.current_screen, self.screens["INSTRUCTIONS"], "INSTRUCTIONS")
         elif result == "GOTO_MENU":
             self.transition.start(self.current_screen, self.screens["MAIN_MENU"], "MAIN_MENU")
         elif result in self.modes:
@@ -75,6 +82,14 @@ class Game(GameBase):
 
             if result == "GOTO_MENU":
                 self.transition.start(self.current_screen, self.screens["MAIN_MENU"], "MAIN_MENU")
+            elif isinstance(result, tuple):
+                signal, score_data = result
+
+                if signal == "GOTO_RESULTS":
+                    SoundPlayer.play_music("menu_theme")
+                    
+                    self.screens["RESULTS"] = ResultsScreen(score=score_data)
+                    self.transition.start(self.current_screen, self.screens["RESULTS"], "RESULTS")
 
         is_game = self.current_screen == self.screens["GAMEPLAY"]
         pygame.mouse.set_visible(not is_game or self.transition.active)

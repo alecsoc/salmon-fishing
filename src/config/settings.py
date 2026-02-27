@@ -46,11 +46,22 @@ class Settings:
         "red_fish": "red_fish.png",
         "green_fish": "green_fish.png",
         "blue_fish": "blue_fish.png",
-        "thought_cloud": "thought_cloud.png",
+        "thought_cloud": "cloud.png",
     }
 
-    SOUNDS_MAP = {}
-    FONTS_MAP = {}
+    FONTS_MAP = {
+        "primary_font": "TitanOne-Regular.ttf",
+        "secondary_font": "Quicksand-Bold.ttf",
+    }
+
+    SOUNDS_MAP = {
+        "main_theme": "main_theme.wav",
+        "menu_theme": "menu_theme.wav",
+        "choose": "choose_effect.wav",
+        "time_up": "time_up.wav",
+        "fail": "fail_effect.wav",
+        "correct": "correct.wav"
+    }
 
     IMAGES = {}
     SOUNDS = {}
@@ -65,7 +76,12 @@ class Settings:
         "PASTEL_ORANGE": (255, 179, 71),
         "PASTEL_BLUE": (174, 198, 207),
         "PASTEL_RED": (255, 105, 97),
-        "PASTEL_TEAL": (100, 200, 190),
+        "PASTEL_TEAL": (100, 200, 190, 0),
+        "PASTEL_GREEN": (152, 240, 151),
+        "AQUA": (43, 152, 255),
         "WHITE": (255, 255, 255),
-        "GRAY_ALPHA": (50, 50, 50, 150)
+        "GRAY_ALPHA": (50, 50, 50, 150),
+        "BUTTON_COLOR": (0, 192, 210),
+        "PANEL_COLOR": (0, 192, 210, 180),
+        "GOLD": (255, 215, 0),
     }

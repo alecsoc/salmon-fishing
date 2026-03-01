@@ -69,7 +69,7 @@ class Game(GameBase):
             self.screens["GAMEPLAY"].on_enter()
             self.transition.start(self.current_screen, self.screens["GAMEPLAY"], "GAMEPLAY")
         elif result == "EXIT":
-            self._running = False
+            self._stop_context()
     
     def update(self, dt: float) -> None:
         new_screen_key = self.transition.update()

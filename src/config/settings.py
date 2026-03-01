@@ -7,7 +7,7 @@ class Settings:
     # Metadata
     TITLE = "Pescar Al Salmón"
     DESCRIPTION = (
-        "Minijuego de integración al proyecto final de Objetos y Abstracción de Datos."
+        "¡Atrapa y mejora la atención y retención de la información a partir de salmones de colores!"
     )
     AUTHORS = [
         "Abelardo Drika",
